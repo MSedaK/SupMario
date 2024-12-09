@@ -12,7 +12,8 @@ public class Pipe : MonoBehaviour
     {
         if (connection != null && other.CompareTag("Player"))
         {
-            if (Input.GetKey(enterKeyCode) && other.TryGetComponent(out Player player)) {
+            if (Input.GetKey(enterKeyCode) && other.TryGetComponent(out Player player))
+            {
                 StartCoroutine(Enter(player));
             }
         }
@@ -20,6 +21,10 @@ public class Pipe : MonoBehaviour
 
     private IEnumerator Enter(Player player)
     {
+        // Devre dýþý býrakýlan iþlevleri kaydet
+        bool wasMovementEnabled = player.movement.enabled;
+
+        // Hareketi devre dýþý býrak
         player.movement.enabled = false;
 
         Vector3 enteredPosition = transform.position + enterDirection;
@@ -28,8 +33,8 @@ public class Pipe : MonoBehaviour
         yield return Move(player.transform, enteredPosition, enteredScale);
         yield return new WaitForSeconds(1f);
 
-        var sideSrolling = Camera.main.GetComponent<SideScrollingCamera>();
-        sideSrolling.SetUnderground(connection.position.y < sideSrolling.undergroundThreshold);
+        var sideScrolling = Camera.main.GetComponent<SideScrollingCamera>();
+        sideScrolling.SetUnderground(connection.position.y < sideScrolling.undergroundThreshold);
 
         if (exitDirection != Vector3.zero)
         {
@@ -42,7 +47,8 @@ public class Pipe : MonoBehaviour
             player.transform.localScale = Vector3.one;
         }
 
-        player.movement.enabled = true;
+        // Hareketi eski durumuna getir
+        player.movement.enabled = wasMovementEnabled;
     }
 
     private IEnumerator Move(Transform player, Vector3 endPosition, Vector3 endScale)
@@ -67,5 +73,5 @@ public class Pipe : MonoBehaviour
         player.position = endPosition;
         player.localScale = endScale;
     }
-
 }
+

@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 15f;
 
     private bool grounded = false;
     void Awake()

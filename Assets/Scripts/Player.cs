@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     public DeathAnimation deathAnimation { get; private set; }
     public Animator animator;
 
-   
     public bool dead => deathAnimation.enabled;
     public bool starpower { get; private set; }
 
@@ -20,13 +19,26 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && !starpower)
+        {
+            Hit(); // Düþmana çarparsa hasar alýr.
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && !starpower)
+        {
+            Hit(); // Düþmana çarparsa hasar alýr.
+        }
+
+    }
+
+
+
     public void Hit()
     {
         if (!dead && !starpower)
         {
-           
-                Death();
-           
+            Death();
         }
     }
 
@@ -40,7 +52,6 @@ public class Player : MonoBehaviour
 
     public void Shrink()
     {
-
         capsuleCollider.size = new Vector2(1f, 1f);
         capsuleCollider.offset = new Vector2(0f, 0f);
 
@@ -56,10 +67,8 @@ public class Player : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-
             yield return null;
         }
-
     }
 
     public void Starpower()
@@ -77,11 +86,6 @@ public class Player : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-
-            if (Time.frameCount % 4 == 0)
-            {
-            }
-
             yield return null;
         }
 
