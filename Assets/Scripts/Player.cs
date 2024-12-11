@@ -11,12 +11,35 @@ public class Player : MonoBehaviour
     public bool dead => deathAnimation.enabled;
     public bool starpower { get; private set; }
 
+    private Rigidbody2D rb;
+
     private void Awake()
     {
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         movement = GetComponent<PlayerMovement>();
         deathAnimation = GetComponent<DeathAnimation>();
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
+    {
+        // Hareket parametresini güncelle
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+
+        // Zýplama ve yere temas parametrelerini güncelle
+        animator.SetBool("IsJumping", !IsGrounded());
+        animator.SetBool("IsGrounded", IsGrounded());
+
+        // Eðilme parametresini güncelle
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            animator.SetBool("IsCrouching", true);
+        }
+        else
+        {
+            animator.SetBool("IsCrouching", false);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -53,11 +76,13 @@ public class Player : MonoBehaviour
     }
 
     public void Jump()
-{
-    Rigidbody2D rb = GetComponent<Rigidbody2D>();
-    rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukarý doðru zýplar
-}
-
+    {
+        if (IsGrounded())
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukarý doðru zýplar
+            animator.SetBool("IsJumping", true);
+        }
+    }
 
     public void Hit()
     {
@@ -116,4 +141,12 @@ public class Player : MonoBehaviour
 
         starpower = false;
     }
+
+    private bool IsGrounded()
+    {
+        // Yere temas kontrolü için bir raycast veya collider kullanabilirsiniz
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, LayerMask.GetMask("Ground"));
+        return hit.collider != null;
+    }
 }
+
