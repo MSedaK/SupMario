@@ -1,3 +1,4 @@
+using Terresquall;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
 
+    // Joystick baðlantýsý
+    public VirtualJoystick movementJoystick;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -14,12 +18,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        // Joystick'ten yatay hareket için deðer al
+        float moveInput = movementJoystick.axis.x;
+
         // Oyuncunun hareketi
-        float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        // Oyuncunun zýplama kontrolü
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // Zýplama joystick'in yukarý ekseniyle tetiklenir
+        if (movementJoystick.axis.y > 0.5f && isGrounded)
         {
             Jump();
         }
