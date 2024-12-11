@@ -23,15 +23,40 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && !starpower)
         {
-            Hit(); // Düþmana çarparsa hasar alýr.
-        }
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && !starpower)
-        {
-            Hit(); // Düþmana çarparsa hasar alýr.
-        }
+            // Çarpýþma noktalarýný al
+            ContactPoint2D[] contacts = collision.contacts;
 
+            // Ýlk temas noktasýný kontrol et
+            if (contacts.Length > 0)
+            {
+                // Çarpýþma normalini kontrol et
+                Vector2 contactNormal = contacts[0].normal;
+
+                // Eðer çarpýþma yukarýdan gerçekleþmiþse
+                if (contactNormal.y > 0.5f)
+                {
+                    // Düþmaný yok et
+                    Destroy(collision.gameObject);
+                    return;
+                }
+                else
+                {
+                    // Yukarýdan çarpýþma deðilse hasar al
+                    Hit();
+                }
+            }
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && !starpower)
+        {
+            Hit(); // Alternatif kontrol
+        }
     }
 
+    public void Jump()
+{
+    Rigidbody2D rb = GetComponent<Rigidbody2D>();
+    rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukarý doðru zýplar
+}
 
 
     public void Hit()

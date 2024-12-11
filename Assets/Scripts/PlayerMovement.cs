@@ -1,53 +1,51 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    public float moveSpeed = 5f; // Oyuncunun hareket hýzý
+    public float jumpForce = 8f; // Oyuncunun zýplama kuvveti
     private Rigidbody2D rb;
-    public float moveSpeed = 5f;
-    public float jumpForce = 15f;
+    private bool isGrounded;
 
-    private bool grounded = false;
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
-        // Hareket (Yön Tuþlarý)
+        // Oyuncunun hareketi
         float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        // Sprite Flip
-        if (moveInput > 0)
-            transform.localScale = new Vector3(1, 1, 1);
-        else if (moveInput < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
-
-        // Zýplama (Space)
-        if (Input.GetButtonDown("Jump") && grounded)
+        // Oyuncunun zýplama kontrolü
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            Debug.Log("Zýplama baþladý!");
-        }
-
-     
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            grounded = true;
+            Jump();
         }
     }
 
-    void OnCollisionExit2D(Collision2D collision)
+    public void Jump()
     {
+        // Oyuncunun yukarý doðru zýplamasýný saðlar
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Oyuncunun zemine temasýný kontrol et
         if (collision.gameObject.CompareTag("Ground"))
         {
-            grounded = false;
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // Oyuncu zeminle temasýný kaybettiðinde
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
         }
     }
 }
