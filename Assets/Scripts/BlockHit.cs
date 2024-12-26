@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // UI elemanlarýný kontrol etmek için
+using UnityEngine.UI; // UI elemanlarï¿½nï¿½ kontrol etmek iï¿½in
 
 public class BlockHit : MonoBehaviour
 {
@@ -9,15 +9,15 @@ public class BlockHit : MonoBehaviour
     public int maxHits = -1;
     private bool animating;
 
-    // Coin sayacý
-    public static int coinCount = 0; // Bu coin sayýsýný tutar
-    public Text coinText; // Canvas'taki Text bileþenine referans
+    // Coin sayacï¿½
+    public static int coinCount = 0; // Bu coin sayï¿½sï¿½nï¿½ tutar
+    public Text coinText; // Canvas'taki Text bileï¿½enine referans
 
     private void Start()
     {
         if (coinText != null)
         {
-            // Baþlangýçta coin sayýsýný güncelle
+            // Baï¿½langï¿½ï¿½ta coin sayï¿½sï¿½nï¿½ gï¿½ncelle
             UpdateCoinText();
         }
     }
@@ -26,6 +26,11 @@ public class BlockHit : MonoBehaviour
     {
         if (!animating && maxHits != 0 && collision.gameObject.CompareTag("Player"))
         {
+            if(gameObject.tag == "Coin")
+            {
+                IncreaseCoinCount();
+            }
+
             if (collision.transform.DotTest(transform, Vector2.up))
             {
                 Hit();
@@ -36,7 +41,7 @@ public class BlockHit : MonoBehaviour
     private void Hit()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = true; // bloðu göster (eðer gizli ise)
+        spriteRenderer.enabled = true; // bloï¿½u gï¿½ster (eï¿½er gizli ise)
 
         maxHits--;
 
@@ -49,9 +54,6 @@ public class BlockHit : MonoBehaviour
         {
             Instantiate(item, transform.position, Quaternion.identity);
         }
-
-        // Coin sayýsýný arttýr ve UI'yi güncelle
-        IncreaseCoinCount();
 
         StartCoroutine(Animate());
     }
@@ -87,16 +89,16 @@ public class BlockHit : MonoBehaviour
         transform.localPosition = to;
     }
 
-    // Coin sayýsýný artýrma fonksiyonu
+    // Coin sayï¿½sï¿½nï¿½ artï¿½rma fonksiyonu
     private void IncreaseCoinCount()
     {
-        coinCount++; // Coin sayýsýný 1 artýr
-        Debug.Log("Coin collected! Current coin count: " + coinCount); // Debug mesajý yazdýr
-        UpdateCoinText(); // Text'i güncelle
+        coinCount++; // Coin sayï¿½sï¿½nï¿½ 1 artï¿½r
+        Debug.Log("Coin collected! Current coin count: " + coinCount); // Debug mesajï¿½ yazdï¿½r
+        UpdateCoinText(); // Text'i gï¿½ncelle
     }
 
 
-    // UI'deki coin sayýsýný güncelleme
+    // UI'deki coin sayï¿½sï¿½nï¿½ gï¿½ncelleme
     private void UpdateCoinText()
     {
         if (coinText != null)

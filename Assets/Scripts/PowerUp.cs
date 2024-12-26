@@ -34,6 +34,10 @@ public class PowerUp : MonoBehaviour
             case Type.Starpower:
                 player.Starpower();
                 break;
+
+            case Type.MagicMushroom:
+                player.MakePlayerBigger();
+                break;
         }
 
         Destroy(gameObject);

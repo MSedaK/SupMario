@@ -1,8 +1,12 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private float scaleDuration = 0.2f;
+    [SerializeField] private float waitingDuration = 4f;
+
     public CapsuleCollider2D capsuleCollider { get; private set; }
     public PlayerMovement movement { get; private set; }
     public DeathAnimation deathAnimation { get; private set; }
@@ -24,14 +28,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // Hareket parametresini güncelle
+        // Hareket parametresini gï¿½ncelle
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
 
-        // Zýplama ve yere temas parametrelerini güncelle
+        // Zï¿½plama ve yere temas parametrelerini gï¿½ncelle
         animator.SetBool("IsJumping", !IsGrounded());
         animator.SetBool("IsGrounded", IsGrounded());
 
-        // Eðilme parametresini güncelle
+        // Eï¿½ilme parametresini gï¿½ncelle
         if (Input.GetKey(KeyCode.LeftControl))
         {
             animator.SetBool("IsCrouching", true);
@@ -46,25 +50,25 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && !starpower)
         {
-            // Çarpýþma noktalarýný al
+            // ï¿½arpï¿½ï¿½ma noktalarï¿½nï¿½ al
             ContactPoint2D[] contacts = collision.contacts;
 
-            // Ýlk temas noktasýný kontrol et
+            // ï¿½lk temas noktasï¿½nï¿½ kontrol et
             if (contacts.Length > 0)
             {
-                // Çarpýþma normalini kontrol et
+                // ï¿½arpï¿½ï¿½ma normalini kontrol et
                 Vector2 contactNormal = contacts[0].normal;
 
-                // Eðer çarpýþma yukarýdan gerçekleþmiþse
+                // Eï¿½er ï¿½arpï¿½ï¿½ma yukarï¿½dan gerï¿½ekleï¿½miï¿½se
                 if (contactNormal.y > 0.5f)
                 {
-                    // Düþmaný yok et
+                    // Dï¿½ï¿½manï¿½ yok et
                     Destroy(collision.gameObject);
                     return;
                 }
                 else
                 {
-                    // Yukarýdan çarpýþma deðilse hasar al
+                    // Yukarï¿½dan ï¿½arpï¿½ï¿½ma deï¿½ilse hasar al
                     Hit();
                 }
             }
@@ -79,7 +83,7 @@ public class Player : MonoBehaviour
     {
         if (IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukarý doðru zýplar
+            rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukarï¿½ doï¿½ru zï¿½plar
             animator.SetBool("IsJumping", true);
         }
     }
@@ -144,9 +148,21 @@ public class Player : MonoBehaviour
 
     private bool IsGrounded()
     {
-        // Yere temas kontrolü için bir raycast veya collider kullanabilirsiniz
+        // Yere temas kontrolï¿½ iï¿½in bir raycast veya collider kullanabilirsiniz
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, LayerMask.GetMask("Ground"));
         return hit.collider != null;
+    }
+
+    private IEnumerator MakePlayerBiggerCoroutine()
+    {
+        transform.DOScale(new Vector3(1.2f, 1.2f, 1f), scaleDuration).SetEase(Ease.OutBack);
+        yield return new WaitForSeconds(waitingDuration);
+        transform.DOScale(Vector3.one, scaleDuration).SetEase(Ease.InBack);
+    }
+
+    public void MakePlayerBigger()
+    {
+        StartCoroutine(MakePlayerBiggerCoroutine());
     }
 }
 
