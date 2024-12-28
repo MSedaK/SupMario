@@ -1,6 +1,7 @@
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -28,14 +29,10 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // Hareket parametresini g�ncelle
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
-
-        // Z�plama ve yere temas parametrelerini g�ncelle
         animator.SetBool("IsJumping", !IsGrounded());
         animator.SetBool("IsGrounded", IsGrounded());
 
-        // E�ilme parametresini g�ncelle
         if (Input.GetKey(KeyCode.LeftControl))
         {
             animator.SetBool("IsCrouching", true);
@@ -50,32 +47,26 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && !starpower)
         {
-            // �arp��ma noktalar�n� al
             ContactPoint2D[] contacts = collision.contacts;
 
-            // �lk temas noktas�n� kontrol et
             if (contacts.Length > 0)
             {
-                // �arp��ma normalini kontrol et
                 Vector2 contactNormal = contacts[0].normal;
 
-                // E�er �arp��ma yukar�dan ger�ekle�mi�se
                 if (contactNormal.y > 0.5f)
                 {
-                    // D��man� yok et
                     Destroy(collision.gameObject);
                     return;
                 }
                 else
                 {
-                    // Yukar�dan �arp��ma de�ilse hasar al
                     Hit();
                 }
             }
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && !starpower)
         {
-            Hit(); // Alternatif kontrol
+            Hit();
         }
     }
 
@@ -83,7 +74,7 @@ public class Player : MonoBehaviour
     {
         if (IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, 8f); // Oyuncu yukar� do�ru z�plar
+            rb.velocity = new Vector2(rb.velocity.x, 8f);
             animator.SetBool("IsJumping", true);
         }
     }
@@ -100,15 +91,31 @@ public class Player : MonoBehaviour
     {
         deathAnimation.enabled = true;
         animator.SetTrigger("Die");
+        StartCoroutine(GameOverSequence());
+    }
 
-        GameManager.Instance.ResetLevel(3f);
+    private IEnumerator GameOverSequence()
+    {
+        // Ölüm animasyonu için bekle
+        yield return new WaitForSeconds(3f);
+
+        // Can sayısını kontrol et
+        if (GameManager.Instance.lives <= 1)
+        {
+            // GameOver sahnesine geç
+            SceneManager.LoadScene("GameOver");
+        }
+        else
+        {
+            // Hala can varsa normal reset işlemi
+            GameManager.Instance.ResetLevel(0f);
+        }
     }
 
     public void Shrink()
     {
         capsuleCollider.size = new Vector2(1f, 1f);
         capsuleCollider.offset = new Vector2(0f, 0f);
-
         animator.SetBool("IsBig", false);
         StartCoroutine(ScaleAnimation());
     }
@@ -133,7 +140,6 @@ public class Player : MonoBehaviour
     private IEnumerator StarpowerAnimation()
     {
         starpower = true;
-
         float elapsed = 0f;
         float duration = 10f;
 
@@ -148,7 +154,6 @@ public class Player : MonoBehaviour
 
     private bool IsGrounded()
     {
-        // Yere temas kontrol� i�in bir raycast veya collider kullanabilirsiniz
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, LayerMask.GetMask("Ground"));
         return hit.collider != null;
     }

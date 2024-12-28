@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     public int world { get; private set; } = 1;
     public int stage { get; private set; } = 1;
-    public int lives { get; private set; } = 3;
+    public int lives { get; private set; } = 1;
     public int coins { get; private set; } = 0;
 
     private void Awake()
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
-        lives = 3;
+        lives = 1;
         coins = 0;
 
         LoadLevel(1, 1);
