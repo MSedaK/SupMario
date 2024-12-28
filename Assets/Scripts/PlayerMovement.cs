@@ -1,4 +1,3 @@
-using Terresquall;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,8 +7,11 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
 
-    // Joystick baðlantýsý
-    public VirtualJoystick movementJoystick;
+    // Dinamik joystick referansý (sadece saða sola hareket için)
+    public DynamicJoystick dynamicJoystick;
+
+    // Sabit joystick referansý (zýplama için)
+    public FixedJoystick fixedJoystick;
 
     private void Awake()
     {
@@ -18,14 +20,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Joystick'ten yatay hareket için deðer al
-        float moveInput = movementJoystick.axis.x;
+        // Dinamik joystick'ten yatay hareket için deðer al
+        float moveInput = dynamicJoystick.Horizontal;
 
-        // Oyuncunun hareketi
+        // Oyuncunun sadece saða sola hareketi
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        // Zýplama joystick'in yukarý ekseniyle tetiklenir
-        if (movementJoystick.axis.y > 0.5f && isGrounded)
+        // Zýplama sabit joystick'e basýlarak tetiklenir
+        if (fixedJoystick.Vertical > 0.5f && isGrounded)
         {
             Jump();
         }
@@ -39,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Oyuncunun zemine temasýný kontrol et
+        // Oyuncunun zemine temasý kontrol edilir
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
