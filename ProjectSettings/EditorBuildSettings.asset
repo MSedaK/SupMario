@@ -12,9 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/1-1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/Snow.unity
+    guid: ed00222abf7a8a8409909946e2ead703
+  - enabled: 1
+    path: Assets/Scenes/Magara.unity
+    guid: 0ae805615c729984b8dd5f811f4a2a7c
+  - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 6881d5f78cf272948a5d70aa1a644e64
-  - enabled: 1
-    path: Assets/Scenes/KarliDaglar.unity
-    guid: 1e5ccfa708e47f94882d3039e193463c
   m_configObjects: {}

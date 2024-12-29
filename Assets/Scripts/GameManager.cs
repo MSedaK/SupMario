@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro; // TextMeshPro için gerekli
 
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
@@ -11,40 +12,47 @@ public class GameManager : MonoBehaviour
     public int lives { get; private set; } = 1;
     public int coins { get; private set; } = 0;
 
+    [SerializeField] private TextMeshProUGUI coinText; // TextMeshPro Text alaný
+
     private void Awake()
     {
-        if (Instance != null) {
+        if (Instance != null)
+        {
             DestroyImmediate(gameObject);
-        } else {
+        }
+        else
+        {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this) {
-            Instance = null;
         }
     }
 
     private void Start()
     {
         Application.targetFrameRate = 60;
-        NewGame();
+
+        // UI'yi güncelle
+        UpdateCoinText();
     }
 
-    public void NewGame()
+    public void AddCoin()
     {
-        lives = 1;
-        coins = 0;
+        coins++;
 
-        LoadLevel(1, 1);
+        // Eðer 100 coin toplandýysa bir can ekle
+        if (coins == 100)
+        {
+            coins = 0;
+            AddLife();
+        }
+
+        // UI'yi güncelle
+        UpdateCoinText();
     }
 
-    public void GameOver()
+    public void AddLife()
     {
-        NewGame();
+        lives++;
     }
 
     public void LoadLevel(int world, int stage)
@@ -70,27 +78,38 @@ public class GameManager : MonoBehaviour
     {
         lives--;
 
-        if (lives > 0) {
+        if (lives > 0)
+        {
             LoadLevel(world, stage);
-        } else {
+        }
+        else
+        {
             GameOver();
         }
     }
 
-    public void AddCoin()
+    public void GameOver()
     {
-        coins++;
+        lives = 1;
+        coins = 0;
+        UpdateCoinText();
+        SceneManager.LoadScene("GameOver");
+    }
 
-        if (coins == 100)
+    private void UpdateCoinText()
+    {
+        if (coinText != null)
         {
-            coins = 0;
-            AddLife();
+            coinText.text = $"{coins}";
         }
     }
 
-    public void AddLife()
+    public void NewGame()
     {
-        lives++;
-    }
+        lives = 1;
+        coins = 0;
 
+        UpdateCoinText();
+        LoadLevel(1, 1);
+    }
 }
