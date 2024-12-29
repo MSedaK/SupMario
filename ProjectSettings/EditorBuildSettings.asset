@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/GameOver.unity
     guid: 6881d5f78cf272948a5d70aa1a644e64
   - enabled: 1
-    path: Assets/2D Platformer Tileset/Scenes/Sample_3.unity
+    path: Assets/Scenes/KarliDaglar.unity
     guid: 1e5ccfa708e47f94882d3039e193463c
   m_configObjects: {}
