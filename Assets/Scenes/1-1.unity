@@ -9734,6 +9734,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002905400}
     m_Modifications:
+    - target: {fileID: 2938452932198393825, guid: 0321727fc4f2a09458753c8f9f0ac24d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 2938452932198393825, guid: 0321727fc4f2a09458753c8f9f0ac24d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8.84
+      objectReference: {fileID: 0}
     - target: {fileID: 2938452933781992816, guid: 0321727fc4f2a09458753c8f9f0ac24d, type: 3}
       propertyPath: m_Name
       value: Flag Pole
