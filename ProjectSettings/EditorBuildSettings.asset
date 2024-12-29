@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/1-1 1.unity
+    guid: 75b6c43ad47cdd7439733c5514b5c105
+  - enabled: 1
     path: Assets/Scenes/1-1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
@@ -14,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 6881d5f78cf272948a5d70aa1a644e64
+  - enabled: 1
+    path: Assets/2D Platformer Tileset/Scenes/Sample_3.unity
+    guid: 1e5ccfa708e47f94882d3039e193463c
   m_configObjects: {}
