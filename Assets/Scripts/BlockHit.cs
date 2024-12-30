@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // UI elemanlar�n� kontrol etmek i�in
+using TMPro; // TextMeshPro için gerekli
 
 public class BlockHit : MonoBehaviour
 {
@@ -9,15 +9,15 @@ public class BlockHit : MonoBehaviour
     public int maxHits = -1;
     private bool animating;
 
-    // Coin sayac�
-    public static int coinCount = 0; // Bu coin say�s�n� tutar
-    public Text coinText; // Canvas'taki Text bile�enine referans
+    // Coin sayacı
+    public static int coinCount = 0; // Bu artık kullanılmayabilir
+    public TextMeshProUGUI coinText; // Canvas'taki Text bileşenine referans
 
     private void Start()
     {
         if (coinText != null)
         {
-            // Ba�lang��ta coin say�s�n� g�ncelle
+            // Başlangıçta coin sayısını güncelle
             UpdateCoinText();
         }
     }
@@ -26,9 +26,9 @@ public class BlockHit : MonoBehaviour
     {
         if (!animating && maxHits != 0 && collision.gameObject.CompareTag("Player"))
         {
-            if(gameObject.tag == "Coin")
+            if (gameObject.CompareTag("Coin"))
             {
-                IncreaseCoinCount();
+                CollectCoin();
             }
 
             if (collision.transform.DotTest(transform, Vector2.up))
@@ -41,7 +41,7 @@ public class BlockHit : MonoBehaviour
     private void Hit()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = true; // blo�u g�ster (e�er gizli ise)
+        spriteRenderer.enabled = true; // Bloğu göster (eğer gizli ise)
 
         maxHits--;
 
@@ -89,21 +89,19 @@ public class BlockHit : MonoBehaviour
         transform.localPosition = to;
     }
 
-    // Coin say�s�n� art�rma fonksiyonu
-    private void IncreaseCoinCount()
+    private void CollectCoin()
     {
-        coinCount++; // Coin say�s�n� 1 art�r
-        Debug.Log("Coin collected! Current coin count: " + coinCount); // Debug mesaj� yazd�r
-        UpdateCoinText(); // Text'i g�ncelle
+        // GameManager üzerinden coin toplama işlemini yap
+        GameManager.Instance.AddCoin();
+        Debug.Log("Coin collected! Total Coins: " + GameManager.Instance.coins);
+        UpdateCoinText();
     }
 
-
-    // UI'deki coin say�s�n� g�ncelleme
     private void UpdateCoinText()
     {
         if (coinText != null)
         {
-            coinText.text = "Coins: " + coinCount.ToString();
+            coinText.text = "Coins: " + GameManager.Instance.coins.ToString();
         }
     }
 }
